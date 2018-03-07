@@ -3,7 +3,8 @@
 
 int main() {
 
-  std::cout << "VIVA LA BAITA 2018" << std::endl;
+  std::cout << "VIVA LA BAITA" << std::endl;
+  std::cout << "ciao" << std::endl;
 
   return 0;
 
