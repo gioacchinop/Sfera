@@ -1,13 +1,12 @@
-#include "TFile.h"
-#include "TTree.h"
-
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <stdlib.h>
 
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/lexical_cast.hpp>
+#include "TFile.h"
+#include "TTree.h"
+#include "TString.h"
+
 
 
 
@@ -21,8 +20,9 @@ int main( int argc, char* argv[] ) {
   }
 
   std::string fileName(argv[1]);
+  TString fileName_tstr(fileName);
 
-  if( boost::starts_with(argv[1], "../data/") ) {
+  if( fileName_tstr.BeginsWith("../data/") ) {
     fileName.erase( 0, 8 );
   }
 
@@ -125,8 +125,7 @@ int main( int argc, char* argv[] ) {
       }
 
       if( words[0]=="===" && words[1]=="EVENT" && wasReadingEvent==false) {
-	ev            = atoi(words[2].c_str());	
-	//std::cout << ev << std::endl;
+        ev = atoi(words[2].c_str());
       }
 
     } // while get lines
