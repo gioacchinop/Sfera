@@ -23,12 +23,22 @@ checkPulseShape: checkPulseShape.cpp
 makeSpectrum: makeSpectrum.cpp
 	$(CC) -Wall $(INCLUDES) -o makeSpectrum makeSpectrum.cpp $(ROOTFLAG) $(EXTRALIBS)
 
+Event: Event.cpp
+	$(CC) -Wall $(INCLUDES) -o Event Event.cpp $(ROOTFLAG) $(EXTRALIBS)
+
+DataTree: DataTree.cpp
+	$(CC) -Wall $(INCLUDES) -o DataTree DataTree.cpp $(ROOTFLAG) $(EXTRALIBS)
+
+Read_Ttree: Read_Ttree.cpp
+	$(CC) -Wall $(INCLUDES) -o Read_Ttree Read_Ttree.cpp $(ROOTFLAG) $(EXTRALIBS) DataTree.cpp 
 
 
-all: asciiToTree checkPulseShape measToTree makeSpectrum
+
+
+all: asciiToTree checkPulseShape measToTree makeSpectrum Event DataTree Read_Ttree
 
 
 clean:
-	rm asciiToTree checkPulseShape measToTree makeSpectrum
-
+	rm asciiToTree checkPulseShape measToTree makeSpectrum Event DataTree Read_Ttree
+ 
 
