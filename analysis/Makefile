@@ -24,13 +24,13 @@ makeSpectrum: makeSpectrum.cpp
 	$(CC) -Wall $(INCLUDES) -o makeSpectrum makeSpectrum.cpp $(ROOTFLAG) $(EXTRALIBS)
 
 Event: Event.cpp
-	$(CC) -Wall $(INCLUDES) -o Event Event.cpp $(ROOTFLAG) $(EXTRALIBS)
+	$(CC) -c $(INCLUDES) -o Event Event.cpp $(ROOTFLAG) $(EXTRALIBS)
 
 DataTree: DataTree.cpp
-	$(CC) -Wall $(INCLUDES) -o DataTree DataTree.cpp $(ROOTFLAG) $(EXTRALIBS)
+	$(CC) -c $(INCLUDES) -o DataTree DataTree.cpp Event $(ROOTFLAG) $(EXTRALIBS) 
 
 Read_Ttree: Read_Ttree.cpp
-	$(CC) -Wall $(INCLUDES) -o Read_Ttree Read_Ttree.cpp $(ROOTFLAG) $(EXTRALIBS) DataTree.cpp 
+	$(CC) -Wall $(INCLUDES) -o Read_Ttree Read_Ttree.cpp DataTree Event  $(ROOTFLAG) $(EXTRALIBS) 
 
 
 

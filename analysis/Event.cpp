@@ -1,3 +1,4 @@
+
 //
 // Event.cpp
 //
@@ -24,7 +25,7 @@ void Event::pShapeHisto( float* pshape, std::string fileName ) {
     }
     TLegend* legend = new TLegend();
     legend->AddEntry(h1,Form("Histogram of event %d, ch %d",event_, channel_), "f");
-    legend->AddEntry(line,Form("baseline = %f",bsline),  "l");
+    legend->AddEntry(line,Form("baseline = %f",bsline),  "l");  
     h1->Draw();
     line->Draw();
     legend->Draw();
@@ -41,18 +42,18 @@ void Event::pShapeHisto( float* pshape, std::string fileName ) {
     
     c1->SaveAs( Form( "%s/pulseShape_ev%d_ch%d.eps", plotsDir.c_str(), event_, channel_ ) );
     c1->SaveAs( Form( "%s/pulseShape_ev%d_ch%d.pdf", plotsDir.c_str(), event_, channel_ ) );
-    
+    delete h1;
+    delete c1;
 }
 
 
-double Event::trapezIntegrator( double xlo, double xhi, double *integrand ) {
+double Event::trapezIntegrator( double xlo, double xhi, float* integrand ) {
     
     std::cout << "-> Integrate pulse shape of event: " << event_ << ", channel: " << channel_ << std::endl;
     
     double sum = 0.;
     for(int i=0; i<npoints_; i++) {
         sum += ((xhi-xlo)/npoints_) * (integrand[i] + integrand[i+1])/2;
-        std::cout << sum << "  " << i << std::endl;
     }
     
     return sum;
@@ -73,4 +74,5 @@ double Event::baseline( float* pshape ){
     }
     return mean;
 }
+
 

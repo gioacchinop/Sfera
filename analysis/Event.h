@@ -33,7 +33,7 @@ public:
     void setNPoints(  int n  ) { npoints_ = n;     }
     int getNpoints() {return npoints_;}
     void pShapeHisto( float* pshape, std::string fileName );  //in input pshape[1024] 1D
-    double trapezIntegrator( double xlo, double xhi, double *integrand );
+    double trapezIntegrator( double xlo, double xhi, float* integrand );
     double baseline( float* pshape );
     
 private:
