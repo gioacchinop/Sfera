@@ -54,11 +54,22 @@ void DataTree::Loop(std::string filename)
     TLegend* legend = new TLegend(0.7,0.2,0.9,0.4);
 
     TCanvas* c1bis = new TCanvas( "c1bis", "multipads", 600, 600 );
+    TCanvas* canvcharge = new TCanvas( "canvcharge", "canvcharge", 600, 600 );
+
     c1bis->Divide(1,4);
     std::vector<TH1D> hch, charge;
     
-    
-    
+    size_t pos = 0;
+    std::string prefix;
+    if((pos = filename.find("_Ascii")) != std::string::npos) {
+        prefix = filename.substr(0, pos);
+    }
+    std::string plotsDir( Form( "plots/%s", prefix.c_str() ) );
+    std::string chargesDir( Form( "plots/%s/charges", prefix.c_str() ) );
+
+    system( Form( "mkdir -p %s", plotsDir.c_str() ) );
+    system( Form( "mkdir -p %s", chargesDir.c_str() ) );
+
     hch.push_back(TH1D( "hch0", "", 100,- 0.001, 0.001 ));
     hch.push_back(TH1D( "hch1", "", 100,- 0.001, 0.001 ));
     hch.push_back(TH1D( "hch2", "", 100,- 0.001, 0.001 ));
@@ -76,22 +87,22 @@ void DataTree::Loop(std::string filename)
     hch.push_back(TH1D( "hch14", "", 100,- 0.001, 0.001 ));
     hch.push_back(TH1D( "hch15", "", 100,- 0.001, 0.001 ));
     
-    charge.push_back(TH1D( "hch0", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch1", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch2", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch3", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch4", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch5", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch6", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch7", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch8", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch9", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch10", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch11", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch12", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch13", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch14", "", 10,- 0.001, 0.001 ));
-    charge.push_back(TH1D( "hch15", "", 10,- 0.001, 0.001 ));
+    charge.push_back(TH1D( "hch0", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch1", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch2", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch3", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch4", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch5", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch6", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch7", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch8", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch9", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch10", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch11", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch12", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch13", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch14", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hch15", "", 100, 0, 60 ));
     
     
     gStyle->SetOptStat(1111111);
@@ -101,6 +112,10 @@ void DataTree::Loop(std::string filename)
         Long64_t ientry = LoadTree(jentry);
         if (ientry < 0) break;
         nb = fChain->GetEntry(jentry);   nbytes += nb;
+       
+        
+        
+       
         
         for(int i = 0; i < nch; i++){ //LOOP OVER CHANNELS
             Event event(ev, i+1, 1024);
@@ -115,16 +130,28 @@ void DataTree::Loop(std::string filename)
             //****************+ grafico 1 bis *******************************
             hch[i].Fill(event.baseline(pshape[i],1));
             
+            //****************+ grafico compt.edge *******************************
+            if (integral<-10 && integral > -200) charge[i].Fill(-(integral-abs(event.baseline(pshape[i],1)*1024)));
+         //   if (integral < -300) std::cout << "ATT: ev " << ev << "ch " <<i+1<< std::endl;
         }
         
         
     }
+    for(int i=0;i<nch;i++){
+        canvcharge->cd();
+        charge[i].Draw();
+        canvcharge->SaveAs( Form( "%s/charge_ch%d.pdf", chargesDir.c_str(), i+1) );
+        canvcharge->Clear();
+        
+    }
+    
+    
     
     int it=1;
     for(int j = 0; j < 4; j++) {
         c1bis->cd(j+1);
         c1bis->SetLogy();
-,
+
         int i = 1;
 
         for(std::vector<TH1D>::iterator h = hch.begin()+(j*4); h != hch.begin()+(j+1)*4; h++) {
@@ -140,15 +167,11 @@ void DataTree::Loop(std::string filename)
         legend->Draw();
 
     }
-    size_t pos = 0;
-    std::string prefix;
-    if((pos = filename.find("_Ascii")) != std::string::npos) {
-        prefix = filename.substr(0, pos);
-    }
     
-    std::string plotsDir( Form( "plots/%s", prefix.c_str() ) );
-    system( Form( "mkdir -p %s", plotsDir.c_str() ) );
+    
+   
     c1bis->SaveAs( Form( "%s/baseline.pdf", plotsDir.c_str()) );
     delete c1bis;
+    delete canvcharge;
     delete legend;
 }
