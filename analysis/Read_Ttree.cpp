@@ -34,7 +34,7 @@ int main(int argc, char* argv[]){
     if(!tree) { std::cout << "null pointer for TTree! exiting..." << std::endl; exit(-1); }
     
     std::cout << "Reading data from root tree " << std::endl;
-      
+    
     DataTree function(tree);
     
     function.Loop(fileName.c_str());
@@ -42,4 +42,5 @@ int main(int argc, char* argv[]){
     rootFile->Close();
     return 0;
     
-}
+}                       
+
