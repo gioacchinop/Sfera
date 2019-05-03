@@ -7,6 +7,7 @@ INCLUDES = -I. -I.. -I$(ROOTSYS)/include -I$(ROOFIT_INCLUDE)/
 ROOTSYS ?= ERROR_RootSysIsNotDefined
 
 ROOTFLAG = `${ROOTSYS}/bin/root-config --cflags --libs`
+ROOTFLAG1 = `${ROOTSYS}/bin/root-config --cflags `
 
 EXTRALIBS := -L$(ROOTSYS)/lib -L$(ROOFIT_LIBDIR)/ -lHtml -lMathCore -lGenVector -lMinuit -lEG  -lPhysics -lz -lTreePlayer -lRooFitCore -lRooFit
 
@@ -24,13 +25,18 @@ makeSpectrum: makeSpectrum.cpp
 	$(CC) -Wall $(INCLUDES) -o makeSpectrum makeSpectrum.cpp $(ROOTFLAG) $(EXTRALIBS)
 
 Event: Event.cpp
-	$(CC) -c $(INCLUDES) -o Event Event.cpp $(ROOTFLAG) $(EXTRALIBS)
+	$(CC) -c $(INCLUDES) -o Event.o Event.cpp $(ROOTFLAG1) 
 
-DataTree: DataTree.cpp
-	$(CC) -c $(INCLUDES) -o DataTree DataTree.cpp Event $(ROOTFLAG) $(EXTRALIBS) 
+Event2: Event2.cpp
+	$(CC) -c $(INCLUDES) -o Event2.o Event2.cpp $(ROOTFLAG1) 
 
-Read_Ttree: Read_Ttree.cpp
-	$(CC) -Wall $(INCLUDES) -o Read_Ttree Read_Ttree.cpp DataTree Event  $(ROOTFLAG) $(EXTRALIBS) 
+
+
+DataTree: DataTree.cpp Event2.cpp
+	$(CC) -c $(INCLUDES) -o DataTree.o DataTree.cpp Event.o $(ROOTFLAG1) 
+
+Read_Ttree: Read_Ttree.cpp DataTree.cpp Event.cpp
+	$(CC) -Wall $(INCLUDES) -o Read_Ttree Read_Ttree.cpp DataTree.o Event.o  $(ROOTFLAG) $(EXTRALIBS)
 
 
 
