@@ -32,7 +32,7 @@ Event2: Event2.cpp
 
 
 
-DataTree: DataTree.cpp Event2.cpp
+DataTree: DataTree.cpp Event.cpp
 	$(CC) -c $(INCLUDES) -o DataTree.o DataTree.cpp Event.o $(ROOTFLAG1) 
 
 Read_Ttree: Read_Ttree.cpp DataTree.cpp Event.cpp
