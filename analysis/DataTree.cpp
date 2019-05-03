@@ -57,8 +57,10 @@ void DataTree::Loop(std::string filename)
     TCanvas* canvcharge = new TCanvas( "canvcharge", "canvcharge", 600, 600 );
     TCanvas* canvDeltaBase = new TCanvas( "canvDeltaBase", "canvDeltaBase", 600, 600 );
     TCanvas* canvDeltaCharge = new TCanvas( "canvDeltaCharge", "", 600, 600 );
-
-    TH1D histoBase = new TH1D( "baseline", "baseline", 100, 0, 17 )
+    TCanvas* canvBaseCH = new TCanvas( "canvBaseCH", "canvBaseCH", 1200, 600 );
+    
+    TH1D* histoBase = new TH1D( "baseline", "baseline", 18, -1.5, 16.5 );
+    
     
     c1bis->Divide(1,4);
     std::vector<TH1D> hch, charge, deltaCharge;
@@ -143,7 +145,7 @@ void DataTree::Loop(std::string filename)
              
         for(int i = 0; i < nch; i++){ //LOOP OVER CHANNELS
             Event event(ev, i+1, 1024);
-	    baseline = event.baseline(pshape[i],1);
+	        baseline = event.baseline(pshape[i],1);
             integral = event.trapezIntegrator(0,1024, pshape[i])-(baseline*1024.);
 	    //  std::cout<< "integral : "<< integral << std::endl;
             
@@ -167,7 +169,6 @@ void DataTree::Loop(std::string filename)
 	    charge[i].Fill((-integral));
            // }
 
-         //   if (integral < -300) std::cout << "ATT: ev " << ev << "ch " <<i+1<< std::endl;
         }
         
         
@@ -194,6 +195,27 @@ void DataTree::Loop(std::string filename)
     canvDeltaBase->SetLogy();
     hDeltaBase->Draw();
     canvDeltaBase->SaveAs( Form( "%s/DeltaBase_ch%d.pdf", plotsDir.c_str(),1 ) );
+   
+    //PLOT BASELINE CON PUNTI E ERRORI
+    for(int i=0;i<nch;i++){
+        histoBase->SetBinContent(histoBase->FindBin(i+1), hchBase[i].GetMean());
+        histoBase->SetBinError(histoBase->FindBin(i+1), hchBase[i].GetRMS());
+    }
+    histoBase->SetMarkerStyle(kFullCircle);
+    
+    histoBase->SetStats(0);
+    
+    canvBaseCH->cd();
+    canvBaseCH->SetGrid();
+    
+    histoBase->SetXTitle("Channel");
+    histoBase->SetYTitle("<Baseline>");
+    gStyle->SetErrorX(0);
+    gStyle->SetEndErrorSize(3);
+    histoBase->Draw("E1");
+    canvBaseCH->SaveAs( Form( "%s/BaseAllCH.pdf",plotsDir.c_str()) );
+    
+    
 
     //PLOT BASELINE
     int it=1;
@@ -220,5 +242,6 @@ void DataTree::Loop(std::string filename)
     delete c1bis;
     delete canvcharge;
     delete canvDeltaBase;
-    
+    delete  canvBaseCH;
+    delete canvDeltaCharge;
 }
