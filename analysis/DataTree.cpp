@@ -146,8 +146,8 @@ void DataTree::Loop(std::string filename)
              
         for(int i = 0; i < nch; i++){ //LOOP OVER CHANNELS
             Event event(ev, i+1, 1024);
-	        baseline = event.baseline(pshape[i],1);
-            integral = event.trapezIntegrator(0,1024, pshape[i])-(baseline*1024.);
+	        baseline = event.baseline(pshape[i],2);
+            integral = event.trapezIntegrator(0,1024, pshape[i])-(baseline*1024);
 	    //  std::cout<< "integral : "<< integral << std::endl;
             
             //***************** grafico 1 *******************************
@@ -160,15 +160,15 @@ void DataTree::Loop(std::string filename)
             
             //***************** grafico delta base. *******************************
 
-            if (i == 0 && integral < -2 && integral > -200 ) hDeltaBase->Fill((baseline-base[i])/base[i]);
+            if (i == 0 && integral < -0.1 ) hDeltaBase->Fill((baseline-base[i])/base[i]);
 
-	    //***************** grafico 2 *******************************
-	    deltaCharge[i].Fill(integral/vcharge[i]);
+	        //***************** grafico 2 *******************************
+            if (integral<-2 && integral > -200) deltaCharge[i].Fill(integral/vcharge[i]);
             
             //***************** grafico 3 *******************************
-           // if (integral<-0.5){
+            if (integral<-5){
 	    charge[i].Fill((-integral));
-           // }
+            }
 
         }
         
