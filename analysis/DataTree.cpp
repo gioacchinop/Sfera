@@ -63,7 +63,7 @@ void DataTree::Loop(std::string filename)
     
     
     c1bis->Divide(1,4);
-    std::vector<TH1D> hch, charge, deltaCharge;
+    std::vector<TH1D> hchBase, charge, deltaCharge;
     std::vector<TLegend> legend;
     
     size_t pos = 0;
@@ -77,24 +77,23 @@ void DataTree::Loop(std::string filename)
     system( Form( "mkdir -p %s", plotsDir.c_str() ) );
     system( Form( "mkdir -p %s", chargesDir.c_str() ) );
 
-    hch.push_back(TH1D( "hch0", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch1", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch2", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch3", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch4", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch5", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch6", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch7", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch8", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch9", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch10", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch11", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch12", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch13", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch14", "", 100,- 0.001, 0.001 ));
-    hch.push_back(TH1D( "hch15", "", 100,- 0.001, 0.001 ));
-    
-    charge.push_back(TH1D( "hcharge0", "", 100, 0, 60 ));
+    hchBase.push_back(TH1D( "hchBase1", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase2", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase3", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase4", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase5", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase6", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase7", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase8", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase9", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase10", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase11", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase12", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase13", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase14", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase15", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase16", "", 100,- 0.001, 0.001 ));
+
     charge.push_back(TH1D( "hcharge1", "", 100, 0, 60 ));
     charge.push_back(TH1D( "hcharge2", "", 100, 0, 60 ));
     charge.push_back(TH1D( "hcharge3", "", 100, 0, 60 ));
@@ -110,8 +109,8 @@ void DataTree::Loop(std::string filename)
     charge.push_back(TH1D( "hcharge13", "", 100, 0, 60 ));
     charge.push_back(TH1D( "hcharge14", "", 100, 0, 60 ));
     charge.push_back(TH1D( "hcharge15", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hcharge16", "", 100, 0, 60 ));
 
-    deltaCharge.push_back(TH1D( "hch0dc", "", 100, 0.045, 0.06 ));
     deltaCharge.push_back(TH1D( "hch1dc", "", 100, 0.045, 0.06 ));
     deltaCharge.push_back(TH1D( "hch2dc", "", 100, 0.045, 0.06 ));
     deltaCharge.push_back(TH1D( "hch3dc", "", 100, 0.045, 0.06 ));
@@ -127,6 +126,8 @@ void DataTree::Loop(std::string filename)
     deltaCharge.push_back(TH1D( "hch13dc", "", 100, 0.045, 0.06 ));
     deltaCharge.push_back(TH1D( "hch14dc", "", 100, 0.045, 0.06 ));
     deltaCharge.push_back(TH1D( "hch15dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch16dc", "", 100, 0.045, 0.06 ));
+
     
     legend.push_back(TLegend(0.7,0.2,0.9,0.4));
     legend.push_back(TLegend(0.7,0.2,0.9,0.4));
@@ -155,7 +156,7 @@ void DataTree::Loop(std::string filename)
             }
             
             //***************** grafico 1 bis *******************************
-            hch[i].Fill(baseline);
+            hchBase[i].Fill(baseline);
             
             //***************** grafico delta base. *******************************
 
@@ -225,9 +226,9 @@ void DataTree::Loop(std::string filename)
 
         int i = 1;
 
-        for(std::vector<TH1D>::iterator h = hch.begin()+(j*4); h != hch.begin()+(j+1)*4; h++) {
+        for(std::vector<TH1D>::iterator h = hchBase.begin()+(j*4); h != hchBase.begin()+(j+1)*4; h++) {
             
-            legend[j].AddEntry(&hch[it-1],Form("ch %d",it), "l");
+            legend[j].AddEntry(&hchBase[it-1],Form("ch %d",it), "l");
             h->Draw("same");
             h->SetLineColor(i);
             it++;
