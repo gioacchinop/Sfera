@@ -56,11 +56,12 @@ void DataTree::Loop(std::string filename)
     TCanvas* c1bis = new TCanvas( "c1bis", "multipads", 600, 600 );
     TCanvas* canvcharge = new TCanvas( "canvcharge", "canvcharge", 600, 600 );
     TCanvas* canvDeltaBase = new TCanvas( "canvDeltaBase", "canvDeltaBase", 600, 600 );
+    TCanvas* canvDeltaCharge = new TCanvas( "canvDeltaCharge", "", 600, 600 );
 
     TH1D histoBase = new TH1D( "baseline", "baseline", 100, 0, 17 )
     
     c1bis->Divide(1,4);
-    std::vector<TH1D> hch, charge;
+    std::vector<TH1D> hch, charge, deltaCharge;
     std::vector<TLegend> legend;
     
     size_t pos = 0;
@@ -107,6 +108,23 @@ void DataTree::Loop(std::string filename)
     charge.push_back(TH1D( "hcharge13", "", 100, 0, 60 ));
     charge.push_back(TH1D( "hcharge14", "", 100, 0, 60 ));
     charge.push_back(TH1D( "hcharge15", "", 100, 0, 60 ));
+
+    deltaCharge.push_back(TH1D( "hch0dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch1dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch2dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch3dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch4dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch5dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch6dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch7dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch8dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch9dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch10dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch11dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch12dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch13dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch14dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch15dc", "", 100, 0.045, 0.06 ));
     
     legend.push_back(TLegend(0.7,0.2,0.9,0.4));
     legend.push_back(TLegend(0.7,0.2,0.9,0.4));
@@ -118,36 +136,35 @@ void DataTree::Loop(std::string filename)
     gStyle->SetOptStat(1111111);
     
     
-    for (Long64_t jentry=0; jentry<nentries;jentry++) {
+    for (Long64_t jentry=0; jentry<nentries;jentry++) { // LOOP OVER EVENTS
         Long64_t ientry = LoadTree(jentry);
         if (ientry < 0) break;
         nb = fChain->GetEntry(jentry);   nbytes += nb;
-       
-        
-        
-       
-        
+             
         for(int i = 0; i < nch; i++){ //LOOP OVER CHANNELS
             Event event(ev, i+1, 1024);
+	    baseline = event.baseline(pshape[i],1);
             integral = event.trapezIntegrator(0,1024, pshape[i])-(baseline*1024.);
-            baseline = event.baseline(pshape[i],1);
-            //  std::cout<< "integral : "<< integral << std::endl;
+	    //  std::cout<< "integral : "<< integral << std::endl;
             
-            //****************+ grafico 1 *******************************
+            //***************** grafico 1 *******************************
             if(ev == 1 && integral < -2 ){
                 event.pShapeHisto(pshape[i], filename.c_str());
             }
             
-            //****************+ grafico 1 bis *******************************
-            hch[i].Fill(event.baseline(pshape[i],1));
+            //***************** grafico 1 bis *******************************
+            hch[i].Fill(baseline);
             
-            //****************+ grafico delta base. *******************************
+            //***************** grafico delta base. *******************************
 
             if (i == 0 && integral < -2 && integral > -200 ) hDeltaBase->Fill((baseline-base[i])/base[i]);
+
+	    //***************** grafico 2 *******************************
+	    deltaCharge[i].Fill(integral/vcharge[i]);
             
-            //****************+ grafico compt.edge *******************************
+            //***************** grafico 3 *******************************
            // if (integral<-0.5){
-                charge[i].Fill((-integral));
+	    charge[i].Fill((-integral));
            // }
 
          //   if (integral < -300) std::cout << "ATT: ev " << ev << "ch " <<i+1<< std::endl;
@@ -155,14 +172,23 @@ void DataTree::Loop(std::string filename)
         
         
     }
+    
     //PLOT CHARGE
     for(int i=0;i<nch;i++){
         canvcharge->cd();
         charge[i].Draw();
         canvcharge->SaveAs( Form( "%s/charge_ch%d.pdf", chargesDir.c_str(), i+1) );
-        canvcharge->Clear();
-        
+        canvcharge->Clear();       
     }
+
+    //PLOT DELTA CHARGE
+    for(int i=0;i<nch;i++){     
+      canvDeltaCharge->cd();
+      deltaCharge[i].Draw();
+      canvDeltaCharge->SaveAs( Form( "%s/deltaCharge_ch%d.pdf", chargesDir.c_str(), i+1) );
+      canvDeltaCharge->Clear();      
+    }
+    
     //PLOT DELTA BASE
     canvDeltaBase->cd();
     canvDeltaBase->SetLogy();
