@@ -78,7 +78,7 @@ int main( int argc, char* argv[] ) {
         std::cout << "-> Starting parsing file." << std::endl;
         nch=0;
         
-        while( getline(fs,line)  && flag < 90000) {
+        while( getline(fs,line) && flag < 52000*16) {
             
             std::string delimiter = " ";
             size_t pos = 0;

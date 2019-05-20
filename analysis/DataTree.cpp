@@ -53,13 +53,13 @@ void DataTree::Loop(std::string filename)
     double baseline = 0;
     int flag = 0;
 
-    TCanvas* c1bis = new TCanvas( "c1bis", "multipads", 600, 600 );
-    TCanvas* canvcharge = new TCanvas( "canvcharge", "canvcharge", 600, 600 );
-    TCanvas* canvDeltaBase = new TCanvas( "canvDeltaBase", "canvDeltaBase", 600, 600 );
-    TCanvas* canvDeltaCharge = new TCanvas( "canvDeltaCharge", "", 600, 600 );
-    TCanvas* canvBaseCH = new TCanvas( "canvBaseCH", "canvBaseCH", 1200, 600 );
+    TCanvas* c1bis = new TCanvas( "c1bis", "multipads", 1200, 1200 );
+    TCanvas* canvcharge = new TCanvas( "canvcharge", "canvcharge", 900, 600 );
+    TCanvas* canvDeltaBase = new TCanvas( "canvDeltaBase", "canvDeltaBase", 900, 600 );
+    TCanvas* canvDeltaCharge = new TCanvas( "canvDeltaCharge", "", 900, 600 );
+    TCanvas* canvBaseCH = new TCanvas( "canvBaseCH", "", 1300, 600 );
     
-    TH1D* histoBase = new TH1D( "baseline", "baseline", 18, -1.5, 16.5 );
+    TH1D* histoBase = new TH1D( "baseline", "Mean Baseline", 18, -0.5, 17.5 );
     
     
     c1bis->Divide(1,4);
@@ -77,62 +77,62 @@ void DataTree::Loop(std::string filename)
     system( Form( "mkdir -p %s", plotsDir.c_str() ) );
     system( Form( "mkdir -p %s", chargesDir.c_str() ) );
 
-    hchBase.push_back(TH1D( "hchBase1", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase2", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase3", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase4", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase5", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase6", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase7", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase8", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase9", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase10", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase11", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase12", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase13", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase14", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase15", "", 100,- 0.001, 0.001 ));
-    hchBase.push_back(TH1D( "hchBase16", "", 100,- 0.001, 0.001 ));
+    hchBase.push_back(TH1D( "hchBase1", "" , 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase2", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase3", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase4", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase5", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase6", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase7", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase8", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase9", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase10", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase11", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase12", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase13", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase14", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase15", "", 100,- 1, 1 ));
+    hchBase.push_back(TH1D( "hchBase16", "", 100,- 1, 1 ));
 
-    charge.push_back(TH1D( "hcharge1", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge2", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge3", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge4", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge5", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge6", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge7", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge8", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge9", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge10", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge11", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge12", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge13", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge14", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge15", "", 100, 0, 60 ));
-    charge.push_back(TH1D( "hcharge16", "", 100, 0, 60 ));
+    charge.push_back(TH1D( "hcharge1", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge2", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge3", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge4", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge5", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge6", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge7", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge8", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge9", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge10", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge11", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge12", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge13", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge14", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge15", "", 80, 0, 60 ));
+    charge.push_back(TH1D( "hcharge16", "", 80, 0, 60 ));
 
-    deltaCharge.push_back(TH1D( "hch1dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch2dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch3dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch4dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch5dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch6dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch7dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch8dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch9dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch10dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch11dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch12dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch13dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch14dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch15dc", "", 100, 0.045, 0.06 ));
-    deltaCharge.push_back(TH1D( "hch16dc", "", 100, 0.045, 0.06 ));
+    deltaCharge.push_back(TH1D( "hch1dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch2dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch3dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch4dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch5dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch6dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch7dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch8dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch9dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch10dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch11dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch12dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch13dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch14dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch15dc", "", 100, 0.048, 0.058 ));
+    deltaCharge.push_back(TH1D( "hch16dc", "", 100, 0.048, 0.058 ));
 
     
-    legend.push_back(TLegend(0.7,0.2,0.9,0.4));
-    legend.push_back(TLegend(0.7,0.2,0.9,0.4));
-    legend.push_back(TLegend(0.7,0.2,0.9,0.4));
-    legend.push_back(TLegend(0.7,0.2,0.9,0.4));
+    legend.push_back(TLegend(0.83,0.6,0.9,0.8));
+    legend.push_back(TLegend(0.83,0.6,0.9,0.8));
+    legend.push_back(TLegend(0.83,0.6,0.9,0.8));
+    legend.push_back(TLegend(0.83,0.6,0.9,0.8));
 
     TH1D* hDeltaBase = new TH1D( "hDbase", "", 100,- 100, 100 );
     
@@ -151,23 +151,24 @@ void DataTree::Loop(std::string filename)
 	    //  std::cout<< "integral : "<< integral << std::endl;
             
             //***************** grafico 1 *******************************
-            if(ev == 1 && integral < -2 ){
+            if(ev == 47 && integral < -2 ){
                 event.pShapeHisto(pshape[i], filename.c_str());
             }
             
             //***************** grafico 1 bis *******************************
-            hchBase[i].Fill(baseline);
+            hchBase[i].Fill(1000*baseline);
             
             //***************** grafico delta base. *******************************
 
-            if (i == 0 && integral < -0.1 ) hDeltaBase->Fill((baseline-base[i])/base[i]);
+            if (i == 0 ) hDeltaBase->Fill((baseline-base[i])/base[i]);
 
 	        //***************** grafico 2 *******************************
             if (integral<-2 && integral > -200) deltaCharge[i].Fill(integral/vcharge[i]);
             
             //***************** grafico 3 *******************************
-            if (integral<-5){
-	    charge[i].Fill((-integral));
+            if (integral<-5 && integral > -200){
+	        charge[i].Fill((-integral));
+               
             }
 
         }
@@ -179,6 +180,9 @@ void DataTree::Loop(std::string filename)
     for(int i=0;i<nch;i++){
         canvcharge->cd();
         charge[i].Draw();
+        charge[i].SetTitle(Form("Charge distribution ch. %d", i+1));
+        charge[i].SetXTitle("Integral of pShape [V]"); //OOOOOOOOOOO UNITà DELLA CARICA????????????????????????????????????????????????????????????
+        charge[i].SetYTitle("# of events");
         canvcharge->SaveAs( Form( "%s/charge_ch%d.pdf", chargesDir.c_str(), i+1) );
         canvcharge->Clear();       
     }
@@ -186,7 +190,12 @@ void DataTree::Loop(std::string filename)
     //PLOT DELTA CHARGE
     for(int i=0;i<nch;i++){     
       canvDeltaCharge->cd();
+      //canvDeltaCharge->SetLogy();
+
       deltaCharge[i].Draw();
+      deltaCharge[i].SetTitle(Form("Charge's ratio : Integral/WaveCatcher ch. %d", i+1));
+      deltaCharge[i].SetXTitle("(Pshape integr.)/(WC charge) [V/C]"); //OOOOOOOOOOO UNITà DELLA CARICA??????????????????????????????????????????????????????????
+      deltaCharge[i].SetYTitle("# of events");
       canvDeltaCharge->SaveAs( Form( "%s/deltaCharge_ch%d.pdf", chargesDir.c_str(), i+1) );
       canvDeltaCharge->Clear();      
     }
@@ -203,14 +212,16 @@ void DataTree::Loop(std::string filename)
         histoBase->SetBinError(histoBase->FindBin(i+1), hchBase[i].GetRMS());
     }
     histoBase->SetMarkerStyle(kFullCircle);
-    
+    histoBase->SetMarkerColor(2);
+
+    histoBase->GetXaxis()->SetNdivisions(32,0,0);
     histoBase->SetStats(0);
-    
+    histoBase->SetLineColor(4);
     canvBaseCH->cd();
-    canvBaseCH->SetGrid();
+    canvBaseCH->SetGridy();
     
-    histoBase->SetXTitle("Channel");
-    histoBase->SetYTitle("<Baseline>");
+    histoBase->SetXTitle("# of Channel");
+    histoBase->SetYTitle("<Baseline> [mV]");
     gStyle->SetErrorX(0);
     gStyle->SetEndErrorSize(3);
     histoBase->Draw("E1");
@@ -220,15 +231,24 @@ void DataTree::Loop(std::string filename)
 
     //PLOT BASELINE
     int it=1;
+    c1bis->SetTitle("Histo. of baselines for every channel");
+
     for(int j = 0; j < 4; j++) {
         c1bis->cd(j+1);
-        c1bis->SetLogy();
-
+        gPad-> SetLogy();
         int i = 1;
 
         for(std::vector<TH1D>::iterator h = hchBase.begin()+(j*4); h != hchBase.begin()+(j+1)*4; h++) {
             
             legend[j].AddEntry(&hchBase[it-1],Form("ch %d",it), "l");
+            h->SetXTitle("Baseline [mV]");
+            h->SetStats(0);
+            h->GetXaxis()->SetLabelSize(0.09);
+            h->GetXaxis()->SetTitleSize(0.09);
+            h->GetXaxis()->SetTitleOffset(-0.8);
+
+            h->GetYaxis()->SetLabelSize(0.06);
+
             h->Draw("same");
             h->SetLineColor(i);
             it++;
@@ -236,6 +256,7 @@ void DataTree::Loop(std::string filename)
             i++;
 
         }
+        legend[j].SetTextSize(0.06);
         legend[j].Draw();
 
     }

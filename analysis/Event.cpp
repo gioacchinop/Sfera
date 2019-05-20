@@ -15,9 +15,9 @@ void Event::pShapeHisto( float* pshape, std::string fileName ) {
     
     TH1D* histo = new TH1D( "h1", "", npoints_, 0., double(npoints_) );
     histo->SetStats(0);
-    TCanvas* c = new TCanvas( "c", "c", 600, 600 );
+    TCanvas* c = new TCanvas( "c", "c", 1000, 600 );
     c->cd();
-    float bsline = baseline(pshape,1);
+    float bsline = baseline(pshape,2);
     TLine* line = new TLine(0, bsline, 1024, bsline);
     line->SetLineColor(kRed);
     for( int i=0; i<npoints_; ++i ){
@@ -25,8 +25,13 @@ void Event::pShapeHisto( float* pshape, std::string fileName ) {
         //  std::cout << pshape[i] << std::endl;
     }
     TLegend* legend = new TLegend(0.7,0.2,0.9,0.4);
-    legend->AddEntry(histo,Form("Histogram of event %d, ch %d",event_, channel_), "l");
+    legend->AddEntry(histo,Form("Shape event %d, ch %d",event_, channel_), "l");
     legend->AddEntry(line,Form("baseline = %3.2e",bsline),  "l");
+    legend->SetTextSize(0.027);
+    histo->SetTitle(Form("Pulseshape ev: %d, ch: %d", event_, channel_));
+    histo->SetXTitle("# sample"); //????????????????????????????????????????????????????????????????????
+    histo->SetYTitle("Voltage [V]");
+
     histo->Draw();
     line->Draw();
     legend->Draw();
@@ -64,7 +69,9 @@ double Event::trapezIntegrator( double xlo, double xhi, float* integrand ) {
 }
 
 double Event::baseline( float* pshape, int flag){
+    
     float mean=0;
+    
     if(flag==1){
         float sum = 0;
         float stdev = 0;
@@ -86,6 +93,7 @@ double Event::baseline( float* pshape, int flag){
         //  std::cout << "\n\nbin: " << i << "\n"<< std::endl;
         delete h2;
     }
+    
     if(flag==2){
         float sum = 0;
         int num = 50;
