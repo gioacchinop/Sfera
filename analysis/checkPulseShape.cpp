@@ -62,7 +62,7 @@ int main( int argc, char* argv[] ) {
   
   size_t pos = 0;
   std::string prefix;
-  if((pos = fileName.find(".")) != std::string::npos) {
+  if((pos = fileName.find("_Ascii")) != std::string::npos) {
     prefix = fileName.substr(0, pos);
   }
 
