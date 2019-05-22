@@ -119,7 +119,7 @@ void MeasTree::Loop(std::string filename)
         
         peak[i]=charge[i].GetMaximumBin();
         
-        TFitResultPtr r = charge[i].Fit("gaus","S","",(peak[i]-3)*1./13,(peak[i]+6)*1./13);
+        TFitResultPtr r = charge[i].Fit("gaus","S","",(peak[i]-3)*13,(peak[i]+6)*13);
         histoPeak->SetBinContent(histoPeak->FindBin(i+1), r->Parameter(1));
         histoPeak->SetBinError(histoPeak->FindBin(i+1), r->Parameter(2));
         
