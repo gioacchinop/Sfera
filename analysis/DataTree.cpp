@@ -56,7 +56,7 @@ void DataTree::Loop(std::string filename)
     int flag = 0;
     
     TCanvas* c1bis = new TCanvas( "c1bis", "multipads", 1200, 1200 );
-    TCanvas* canvcharge = new TCanvas( "canvcharge", "canvcharge", 1200, 1200 );
+    TCanvas* canvcharge = new TCanvas( "canvcharge", "canvcharge", 900, 600 );
     TCanvas* canvDeltaBase = new TCanvas( "canvDeltaBase", "canvDeltaBase", 900, 600 );
     TCanvas* canvDeltaCharge = new TCanvas( "canvDeltaCharge", "", 900, 600 );
     TCanvas* canvBaseCH = new TCanvas( "canvBaseCH", "", 1300, 600 );
@@ -139,7 +139,6 @@ void DataTree::Loop(std::string filename)
     legend.push_back(TLegend(0.83,0.6,0.9,0.8));
     legend.push_back(TLegend(0.83,0.6,0.9,0.8));
     
-    
     TH1D* hDeltaBase = new TH1D( "hDbase", "", 100,- 100, 100 );
     
     gStyle->SetOptStat(1111111);
@@ -157,16 +156,16 @@ void DataTree::Loop(std::string filename)
             //  std::cout<< "integral : "<< integral << std::endl;
             
             //***************** grafico 1 *******************************
-            if(ev == 1 && integral < -2 ){
+            if(ev == 47 && integral < -2 ){
                 event.pShapeHisto(pshape[i], filename.c_str());
             }
             
             //***************** grafico 1 bis *******************************
-            hchBase[i].Fill(baseline);
+            hchBase[i].Fill(1000*baseline);
             
             //***************** grafico delta base. *******************************
             
-            if (i == 0 && integral < -0.1 ) hDeltaBase->Fill((baseline-base[i])/base[i]);
+            if (i == 0 ) hDeltaBase->Fill((baseline-base[i])/base[i]);
             
             //***************** grafico 2 *******************************
             if (integral<-2 && integral > -200) deltaCharge[i].Fill(integral/vcharge[i]);
@@ -177,8 +176,9 @@ void DataTree::Loop(std::string filename)
                 
             }
             
-            
         }
+        
+        
     }
     
     //PLOT CHARGE
@@ -211,8 +211,7 @@ void DataTree::Loop(std::string filename)
     gStyle->SetEndErrorSize(3);
     histoPeak->Draw("E1");
     canvPeak->SaveAs( Form( "%s/PeakDistrCH.pdf",plotsDir.c_str()) );
-    
-    
+    canvPeak->Clear();
     
     //PLOT DELTA CHARGE
     for(int i=0;i<nch;i++){
@@ -225,80 +224,72 @@ void DataTree::Loop(std::string filename)
         deltaCharge[i].SetYTitle("# of events");
         canvDeltaCharge->SaveAs( Form( "%s/deltaCharge_ch%d.pdf", chargesDir.c_str(), i+1) );
         canvDeltaCharge->Clear();
-        for(int i=0;i<nch;i++){
-            canvDeltaCharge->cd();
-            deltaCharge[i].Draw();
-            canvDeltaCharge->SaveAs( Form( "%s/deltaCharge_ch%d.pdf", chargesDir.c_str(), i+1) );
-            canvDeltaCharge->Clear();
-        }
-        
-        //PLOT DELTA BASE
-        canvDeltaBase->cd();
-        canvDeltaBase->SetLogy();
-        hDeltaBase->Draw();
-        canvDeltaBase->SaveAs( Form( "%s/DeltaBase_ch%d.pdf", plotsDir.c_str(),1 ) );
-        
-        //PLOT BASELINE CON PUNTI E ERRORI
-        for(int i=0;i<nch;i++){
-            histoBase->SetBinContent(histoBase->FindBin(i+1), hchBase[i].GetMean());
-            histoBase->SetBinError(histoBase->FindBin(i+1), hchBase[i].GetRMS());
-        }
-        histoBase->SetMarkerStyle(kFullCircle);
-        histoBase->SetMarkerColor(2);
-        
-        histoBase->GetXaxis()->SetNdivisions(32,0,0);
-        
-        histoBase->SetStats(0);
-        
-        canvBaseCH->cd();
-        canvBaseCH->SetGrid();
-        
-        histoBase->SetXTitle("Channel");
-        histoBase->SetYTitle("<Baseline>");
-        gStyle->SetErrorX(0);
-        gStyle->SetEndErrorSize(3);
-        histoBase->Draw("E1");
-        canvBaseCH->SaveAs( Form( "%s/BaseAllCH.pdf",plotsDir.c_str()) );
-        
-        
-        
-        //PLOT BASELINE
-        int it=1;
-        c1bis->SetTitle("Histo. of baselines for every channel");
-        
-        for(int j = 0; j < 4; j++) {
-            c1bis->cd(j+1);
-            c1bis->SetLogy();
-            
-            int i = 1;
-            
-            for(std::vector<TH1D>::iterator h = hchBase.begin()+(j*4); h != hchBase.begin()+(j+1)*4; h++) {
-                
-                legend[j].AddEntry(&hchBase[it-1],Form("ch %d",it), "l");
-                h->SetXTitle("Baseline [mV]");
-                h->SetStats(0);
-                h->GetXaxis()->SetLabelSize(0.09);
-                h->GetXaxis()->SetTitleSize(0.09);
-                h->GetXaxis()->SetTitleOffset(-0.8);
-                
-                h->GetYaxis()->SetLabelSize(0.06);
-                h->Draw("same");
-                h->SetLineColor(i);
-                it++;
-                c1bis->Update();
-                i++;
-                
-            }
-            legend[j].Draw();
-            
-        }
-        c1bis->SaveAs( Form( "%s/baseline.pdf", plotsDir.c_str()) );
-        delete c1bis;
-        delete canvcharge;
-        delete canvDeltaBase;
-        delete canvBaseCH;
-        delete canvDeltaCharge;
     }
     
+    //PLOT DELTA BASE
+    canvDeltaBase->cd();
+    canvDeltaBase->SetLogy();
+    hDeltaBase->Draw();
+    canvDeltaBase->SaveAs( Form( "%s/DeltaBase_ch%d.pdf", plotsDir.c_str(),1 ) );
+    
+    //PLOT BASELINE CON PUNTI E ERRORI
+    for(int i=0;i<nch;i++){
+        histoBase->SetBinContent(histoBase->FindBin(i+1), hchBase[i].GetMean());
+        histoBase->SetBinError(histoBase->FindBin(i+1), hchBase[i].GetRMS());
+    }
+    histoBase->SetMarkerStyle(kFullCircle);
+    histoBase->SetMarkerColor(2);
+    
+    histoBase->GetXaxis()->SetNdivisions(32,0,0);
+    histoBase->SetStats(0);
+    histoBase->SetLineColor(4);
+    canvBaseCH->cd();
+    canvBaseCH->SetGridy();
+    
+    histoBase->SetXTitle("# of Channel");
+    histoBase->SetYTitle("<Baseline> [mV]");
+    gStyle->SetErrorX(0);
+    gStyle->SetEndErrorSize(3);
+    histoBase->Draw("E1");
+    canvBaseCH->SaveAs( Form( "%s/BaseAllCH.pdf",plotsDir.c_str()) );
+    
+    
+    
+    //PLOT BASELINE
+    int it=1;
+    c1bis->SetTitle("Histo. of baselines for every channel");
+    
+    for(int j = 0; j < 4; j++) {
+        c1bis->cd(j+1);
+        gPad-> SetLogy();
+        int i = 1;
+        
+        for(std::vector<TH1D>::iterator h = hchBase.begin()+(j*4); h != hchBase.begin()+(j+1)*4; h++) {
+            
+            legend[j].AddEntry(&hchBase[it-1],Form("ch %d",it), "l");
+            h->SetXTitle("Baseline [mV]");
+            h->SetStats(0);
+            h->GetXaxis()->SetLabelSize(0.09);
+            h->GetXaxis()->SetTitleSize(0.09);
+            h->GetXaxis()->SetTitleOffset(-0.8);
+            
+            h->GetYaxis()->SetLabelSize(0.06);
+            
+            h->Draw("same");
+            h->SetLineColor(i);
+            it++;
+            c1bis->Update();
+            i++;
+            
+        }
+        legend[j].SetTextSize(0.06);
+        legend[j].Draw();
+        
+    }
+    c1bis->SaveAs( Form( "%s/baseline.pdf", plotsDir.c_str()) );
+    delete c1bis;
+    delete canvcharge;
+    delete canvDeltaBase;
+    delete  canvBaseCH;
+    delete canvDeltaCharge;
 }
-
