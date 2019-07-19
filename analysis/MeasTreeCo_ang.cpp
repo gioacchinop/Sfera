@@ -176,9 +176,9 @@ void MeasTreeCo::Loop(std::string filename) {
 
     
     canvDistr->cd();
-    /*for(int i=1; i <= 8; i++){
+    for(int i=1; i <= 8; i++){
       angleDistr->SetBinContent(i, angleDistr->GetBinContent(i)/2.);
-      }*/
+    }
     angleDistr->GetXaxis()->SetTitle("Angle (#circ)");
     angleDistr->GetYaxis()->SetTitle("No of events");
     //angleDistr->GetXaxis()->SetLimits(0., 202.5);
