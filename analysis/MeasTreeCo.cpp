@@ -56,10 +56,11 @@ void MeasTreeCo::Loop(std::string filename)
     int flag = 0;
     
     TCanvas* canvcharge = new TCanvas( "canvcharge", "canvcharge", 1200, 1200 );
+    TCanvas* canvchargetot = new TCanvas( "canvchargetot", "canvchargetot", 1600, 800);
     
     TCanvas* canvPeak = new TCanvas( "canvPeak", "", 1300, 600 );
     
-    TH1D* histoPeak = new TH1D( "peak", "Peak", 18, -0.5, 17.5);
+    TH1D* histoPeak = new TH1D( "peak", "Photopeak for Na-22 Back-To-Back", 18, -0.5, 17.5);
 
     FILE* fp;
     fp = fopen("Calib.txt", "r");
@@ -82,7 +83,8 @@ void MeasTreeCo::Loop(std::string filename)
     std::vector<TH1D> charge;
     std::vector<TLegend> legend;
 
-    TH1D chargeTot( "hchargeTot", "", 300, 0, 2000 );
+    TH1D chargeTot( "hchargeTot", "Na-22BB charge spectrum before calibration", 200, 0, 900 );
+    TH1D chargeTotCal( "hchargeTot", "Na-22BB charge spectrum after calibration", 200, 0, 900 );
       
     double peak[16];
     
@@ -126,26 +128,15 @@ void MeasTreeCo::Loop(std::string filename)
 	//std::cout << std::endl;
 	
         for(int i = 0; i < nch; i++){ //LOOP OVER CHANNELS
-	  //std::cout << letime[i] << std::endl;
-            
-	  //***************** grafico 3 *******************************
-
-	  // Only back to back
-	   if (-vcharge[i] > minBin && -vcharge[i-1+2*((i+1)%2)] > minBin) charge[i].Fill((-vcharge[i]));
-
-	   if(-vcharge[i] > minBin ) chargeTot.Fill(-vcharge[i]*calib[i]);
-	   
-	  // Loop over all channels
-	  /* for( int j = 0; j < nch; j++){
-	    if (-vcharge[i] > minBin && -vcharge[j] > minBin) charge[i].Fill((-vcharge[i]));
-	    } */
-	  
-	   // Using letime
-	   /*if( std::fabs(letime[i]-letime[j])/letime[i] < 0.01 ) charge[i].Fill((-vcharge[i]));
-	     if( std::fabs(letime[i]-letime[i-1+2*((i+1)%2)])/letime[i] < 0.01 ) charge[i].Fill((-vcharge[i])); */
-	  
-	  //}
-	  
+	
+	  //if(-vcharge[i]*calib[i] > minBin) chargeTot.Fill(-vcharge[i]*calib[i]);
+	  //if(-vcharge[i] > minBin) charge[i].Fill(-vcharge[i]);
+	 
+	  if (-vcharge[i]*calib[i] > 50 && -vcharge[i-1+2*((i+1)%2)]*calib[i-1+2*((i+1)%2)] > 50) {
+	    charge[i].Fill(-vcharge[i]);
+	    chargeTot.Fill(-vcharge[i]);
+	    chargeTotCal.Fill(-vcharge[i]*calib[i]);
+	  }
 	}
 	  
     }
@@ -159,19 +150,30 @@ void MeasTreeCo::Loop(std::string filename)
         peak[i]=charge[i].GetMaximumBin();
         
         TFitResultPtr r = charge[i].Fit("gaus","S","",(peak[i]-3)*13,(peak[i]+6)*13);
-        histoPeak->SetBinContent(histoPeak->FindBin(i+1), r->Parameter(1)*calib[i]);
-        histoPeak->SetBinError(histoPeak->FindBin(i+1), r->Parameter(2)*calib[i]);
+        histoPeak->SetBinContent(histoPeak->FindBin(i+1), r->Parameter(1));
+        histoPeak->SetBinError(histoPeak->FindBin(i+1), r->Parameter(2));
         
         charge[i].Draw();
         canvcharge->SaveAs( Form( "%s/chargeCo_ch%d.pdf", chargesDir.c_str(), i+1) );
         canvcharge->Clear();
-	std::cout << "Calibration ratio ch" << i+1 <<": " << CAL/(r->Parameter(1)) << std::endl << std::endl;
     }
 
-    canvcharge->cd();
+    canvchargetot->Divide(2,1);
+    
+    canvchargetot->cd(1);
+    chargeTot.SetXTitle("Charge (pC)");
+    chargeTot.SetYTitle("# of events");
+    chargeTot.GetYaxis()->SetRangeUser(0,740);
     chargeTot.Draw();
-    canvcharge->SaveAs( Form( "%s/chargeTot.pdf", chargesDir.c_str() ));
-    canvcharge->Clear();
+    
+    canvchargetot->cd(2);
+    chargeTotCal.SetXTitle("Charge (pC)");
+    chargeTotCal.SetYTitle("# of events");
+    chargeTotCal.GetYaxis()->SetRangeUser(0,740);
+    chargeTotCal.Draw();
+    
+    canvchargetot->SaveAs( Form( "%s/chargeTotBis.pdf", chargesDir.c_str() ));
+    canvchargetot->Clear();
 			
     
     histoPeak->SetMarkerStyle(kFullCircle);
@@ -184,14 +186,14 @@ void MeasTreeCo::Loop(std::string filename)
     canvPeak->SetGridy();
     
     histoPeak->SetXTitle("# of Channel");
-    histoPeak->SetYTitle("Peak [V]");//OOOOOOOOOOO UNITà DELLA CARICA????????????????????????????????????????????????????????????
+    histoPeak->SetYTitle("Charge [pC]");
     gStyle->SetErrorX(0);
     gStyle->SetEndErrorSize(3);
     histoPeak->Draw("E1");
     canvPeak->SaveAs( Form( "%s/PeakDistrCH.pdf",plotsDir.c_str()) );
 
     fclose(fp);
-    delete canvcharge;
+    delete canvcharge, canvchargetot;
     
 }
 
